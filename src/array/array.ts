@@ -532,3 +532,55 @@ export const LongestItem = (...args: any[]): any => {
     return args.reduce((acc, cur) => cur.length > acc.length ? cur : acc)
 };
 
+/**
+ * @name 最大的N个值，如果N大于1，则返回逆序排列的N个值组成的数组
+ * @param array
+ * @param n
+ * @extends Array.sort
+ * @example
+ * maxN([1, 2, 3]); // [3]
+ * maxN([1, 2, 3], 2); // [3,2]
+ */
+export const MaxN = (array: any[], n = 1): any[] => {
+    return [...array].sort((pre, next) => next - pre).slice(0, n)
+};
+
+/**
+ * @name 最小的N个值，如果N大于1，则返回逆序排列的N个值组成的数组
+ * @param array
+ * @param n
+ * @extends Array.sort
+ * @example
+ * maxN([1, 2, 3]); // [3]
+ * maxN([1, 2, 3], 2); // [3,2]
+ */
+export const MinN = (array: any[], n = 1): any[] => {
+    return [...array].sort((pre, next) => pre - next).slice(0, n)
+};
+
+/**
+ * @name 如果过滤器函数对于数组中所有数据都返回false，则本函数返回true，否则返回false
+ * @param array
+ * @param filter
+ * @extends Array.some
+ * @example
+ * none([0, 1, 3, 0], x => x == 2); // true
+ * none([0, 0, 0]); // true
+ */
+export const None = (array: any[], filter: Filter = Boolean): boolean => {
+    return !array.some(filter)
+};
+
+/**
+ * @name 返回第N个值，如果N取负数则从尾部开始计算
+ * @param array
+ * @param n
+ * @info 使用slice绕过越界和负数问题，需要处理n+1导致的0 问题
+ * @extends Array.slice
+ * @example
+ * nthElement(['a', 'b', 'c'], 1); // 'b'
+ * nthElement(['a', 'b', 'b'], -3); // 'a'
+ */
+export const NthElement = (array: any[], n = 0): any => {
+    return (n === -1 ? array.slice(n) : array.slice(n, n + 1))[0];
+};
