@@ -1,0 +1,24 @@
+{
+  "name": "30seccode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r ts-node/register src/**/*.test.ts"
+  },
+  "keywords": [
+    "code",
+    "test",
+    "typescript"
+  ],
+  "author": "fuchao.zheng <zhengfuchao2008@126.com> (https://github.com/fuchao2012)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.1.5",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3"
+  }
+}
