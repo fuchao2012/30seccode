@@ -293,7 +293,6 @@ describe('array', () => {
             // findLast([1, 2, 3, 4], n => n % 2 === 1); // 3
             const array = [1, 2, 3, 4];
             const filter = n => n % 2 === 1;
-            const result = 3;
             Array.FindLast(array, filter);
             // 不脏
             expect(array).to.eql([1, 2, 3, 4]);
@@ -458,21 +457,121 @@ describe('array', () => {
             const result = [[[5, 5], [5, 5]], [[5, 5], [5, 5]]];
             expect(Array.InitializeNDArray(initial, 2, 2, 2)).to.eql(result);
         });
-    });
-    it('两个数组的交集', function () {
-        // intersection([1, 2, 3], [4, 3, 2]); // [2,3]
-        const srcArray = [1, 2, 3];
-        const disArray = [4, 3, 2];
-        const result = [2, 3];
-        expect(Array.Intersection(srcArray, disArray)).to.eql(result);
-    });
 
-    it('两个数组先过filter，然后求交集', function () {
-        // intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [2.1]
-        const srcArray = [2.1, 1.2];
-        const disArray = [2.3, 3.4];
-        const result = [2.1];
-        expect(Array.Intersection(srcArray, disArray)).to.eql(result);
+        it('两个数组的交集', function () {
+            // intersection([1, 2, 3], [4, 3, 2]); // [2,3]
+            const srcArray = [1, 2, 3];
+            const disArray = [4, 3, 2];
+            const result = [2, 3];
+            expect(Array.Intersection(srcArray, disArray)).to.eql(result);
+        });
+
+        it('两个数组先过filter，然后求交集', function () {
+            // intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [2.1]
+            const srcArray = [2.1, 1.2];
+            const disArray = [2.3, 3.4];
+            const filter = Math.floor;
+            const result = [2.1];
+            expect(Array.IntersectionBy(srcArray, disArray, filter)).to.eql(result);
+        });
+        it('两个数组通过映射函数后求交集', function () {
+            // intersectionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b)); // [1.5, 3, 0]
+            const srcArray = [1, 1.2, 1.5, 3, 0];
+            const disArray = [1.9, 3, 0, 3.9];
+            const comparer = (a, b) => Math.round(a) === Math.round(b);
+            const result = [1.5, 3, 0];
+            expect(Array.IntersectionWith(srcArray, disArray, comparer)).to.eql(result);
+        });
+
+
+        it('是否是有序数组1', function () {
+            // isSorted([0, 1, 2, 2]); // 1
+            const array = [0, 1, 2, 2];
+            const result = 1;
+            expect(Array.IsSorted(array)).to.equal(result);
+        });
+        it('是否是有序数组2', function () {
+            // isSorted([4, 3, 2]); // -1
+            const array = [4, 3, 2];
+            const result = -1;
+            expect(Array.IsSorted(array)).to.equal(result);
+        });
+        it('是否是有序数组3', function () {
+            // isSorted([4, 3, 5]); // 0
+            const array = [4, 3, 5];
+            const result = 0;
+            expect(Array.IsSorted(array)).to.equal(result);
+        });
+
+
+        it('将数组元素用分隔符串联起来1', function () {
+            // join(['pen', 'pineapple', 'apple', 'pen'], ',', '&'); // "pen,pineapple,apple&pen"
+            const array = ['pen', 'pineapple', 'apple', 'pen'];
+            const separator = ',';
+            const lastSeparator = '&';
+            const result = "pen,pineapple,apple&pen";
+            expect(Array.Join(array, separator, lastSeparator)).to.equal(result);
+        });
+        it('将数组元素用分隔符串联起来2', function () {
+            // join(['pen', 'pineapple', 'apple', 'pen'], ','); // "pen,pineapple,apple,pen"
+            const array = ['pen', 'pineapple', 'apple', 'pen'];
+            const separator = ',';
+            const result = "pen,pineapple,apple,pen";
+            expect(Array.Join(array, separator)).to.equal(result);
+        });
+        it('将数组元素用分隔符串联起来3', function () {
+            // join(['pen', 'pineapple', 'apple', 'pen']); // "pen,pineapple,apple,pen"
+            const array = ['pen', 'pineapple', 'apple', 'pen'];
+            const result = "pen,pineapple,apple,pen";
+            expect(Array.Join(array)).to.equal(result);
+        });
+
+
+        it('JSON转CSV1', function () {
+            // JSONtoCSV([{ a: 1, b: 2 }, { a: 3, b: 4, c: 5 }, { a: 6 }, { b: 7 }], ['a', 'b']);
+            // 'a,b\n"1","2"\n"3","4"\n"6",""\n"","7"'
+            const array = [{a: 1, b: 2}, {a: 3, b: 4, c: 5}, {a: 6}, {b: 7}];
+            const headers = ['a', 'b'];
+            const result = 'a,b\n"1","2"\n"3","4"\n"6",""\n"","7"';
+            expect(Array.JSONtoCSV(array, headers)).to.equal(result);
+        });
+        it('JSON转CSV2', function () {
+            // JSONtoCSV([{ a: 1, b: 2 }, { a: 3, b: 4, c: 5 }, { a: 6 }, { b: 7 }], ['a', 'b'], ';');
+            // 'a;b\n"1";"2"\n"3";"4"\n"6";""\n"";"7"'
+            const array = [{a: 1, b: 2}, {a: 3, b: 4, c: 5}, {a: 6}, {b: 7}];
+            const headers = ['a', 'b'];
+            const separator = ';';
+            const result = 'a;b\n"1";"2"\n"3";"4"\n"6";""\n"";"7"';
+            expect(Array.JSONtoCSV(array, headers, separator)).to.equal(result);
+        });
+
+
+        it('数组最后一个', function () {
+            // join(['pen', 'pineapple', 'apple', 'pen'], ','); // "pen,pineapple,apple,pen"
+            const array = [1, 2, 3];
+            const result = 3;
+            expect(Array.Last(array)).to.equal(result);
+        });
+    });
+    it('提供参数中length最大的元素1', function () {
+        // longestItem('this', 'is', 'a', 'testcase'); // 'testcase'
+        expect(Array.LongestItem('this', 'is', 'a', 'testcase')).to.equal('testcase');
+    });
+    it('提供参数中length最大的元素2', function () {
+        // longestItem(...['a', 'ab', 'abc']); // 'abc'
+        expect(Array.LongestItem(...['a', 'ab', 'abc'])).to.equal('abc');
+    });
+    it('提供参数中length最大的元素3', function () {
+        // longestItem(...['a', 'ab', 'abc'], 'abcd'); // 'abcd'
+        expect(Array.LongestItem(...['a', 'ab', 'abc'], 'abcd')).to.equal('abcd');
+    });
+    it('提供参数中length最大的元素4', function () {
+        // longestItem([1, 2, 3], [1, 2], [1, 2, 3, 4, 5]); // [1, 2, 3, 4, 5]
+        expect(Array.LongestItem([1, 2, 3], [1, 2], [1, 2, 3, 4, 5])).to.eql([1, 2, 3, 4, 5]);
+    });
+    it('提供参数中length最大的元素5', function () {
+        // longestItem([1, 2, 3], 'foobar'); // 'foobar'
+        expect(Array.LongestItem([1, 2, 3], 'foobar')).to.equal('foobar');
     });
 
 });

@@ -436,78 +436,99 @@ export const Intersection = (srcArray: any[], disArray: any[]): any[] => {
  * @param srcArray
  * @param disArray
  * @param filter
- * @extends Array.every
+ * @extends Array.filter set.has
  * @example intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [2.1]
  */
 export const IntersectionBy = (srcArray: any[], disArray: any[], filter: Filter): any[] => {
-    return srcArray.map(filter).map(item=>~(disArray.map(filter)))
+    return srcArray.filter(srcItem => (
+        new Set(disArray.map(filter)))
+        .has(filter(srcItem)))
 };
 /**
- * @name 数组所有内容都满足
+ * @name 两个数组通过映射函数后求交集
  * @param srcArray
  * @param disArray
- * @param comparer
- * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
+ * @param comparer(srcItem, disItem)
+ * @extends Array.filter Array.findIndex
+ * @example intersectionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b));
+ * // [1.5, 3, 0]
  */
 export const IntersectionWith = (srcArray: any[], disArray: any[], comparer: Filter): any[] => {
-    return null
+    return srcArray.filter(srcItem => disArray.findIndex(disItem => comparer(srcItem, disItem)) !== -1)
 };
 /**
- * @name 数组所有内容都满足
+ * @name 是否是有序数组
  * @param array
  * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
+ * @example
+ * isSorted([0, 1, 2, 2]); // 1
+ * isSorted([4, 3, 2]); // -1
+ * isSorted([4, 3, 5]); // 0
  */
-export const IsSorted = (array: any[]): -1 | 0 | 1 => {
-    return null
+export const IsSorted = (array: any[]): number => {
+    return array.every((value, index) => !index || (value >= array[index - 1]))
+        ? 1 : array.every((value, index) => !index || (value <= array[index - 1]))
+            ? -1 : 0;
 };
 /**
- * @name 数组所有内容都满足
+ * @name 将数组元素用分隔符串联起来
  * @param array
  * @param separator
  * @param lastSeparator
- * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
+ * @extends Array.reduce
+ * @example
+ * join(['pen', 'pineapple', 'apple', 'pen'], ',', '&'); // "pen,pineapple,apple&pen"
+ * join(['pen', 'pineapple', 'apple', 'pen'], ','); // "pen,pineapple,apple,pen"
+ * join(['pen', 'pineapple', 'apple', 'pen']); // "pen,pineapple,apple,pen"
  */
-export const Join = (array: any[], separator: string, lastSeparator?: string): string => {
-    return null
+export const Join = (array: any[], separator = ',', lastSeparator = separator): string => {
+    return array.reduce(
+        (acc, cur, idx) => idx === array.length - 2
+            ? acc + cur + lastSeparator
+            : idx === array.length - 1
+                ? acc + cur
+                : acc + cur + separator,
+        '')
 };
 /**
- * @name 数组所有内容都满足
+ * @name JSON转CSV
  * @param array
- * @param columns
+ * @param headers
  * @param separator
  * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
+ * @example
+ * JSONtoCSV([{ a: 1, b: 2 }, { a: 3, b: 4, c: 5 }, { a: 6 }, { b: 7 }], ['a', 'b']); // 'a,b\n"1","2"\n"3","4"\n"6",""\n"","7"'
+ * JSONtoCSV([{ a: 1, b: 2 }, { a: 3, b: 4, c: 5 }, { a: 6 }, { b: 7 }], ['a', 'b'], ';'); // 'a;b\n"1";"2"\n"3";"4"\n"6";""\n"";"7"'
  */
-export const JSONtoCSV = (array: any[], columns: any[], separator?: string): string => {
-    return null
+export const JSONtoCSV = (array: any[], headers: any[], separator = ','): string => {
+    // headers = Object.keys(array[0])
+    return [headers.join(separator), ...array.map(item =>
+        headers.reduce(
+            (acc, cur) => `${acc}${!acc.length ? '' : separator}"${!item[cur] ? '' : item[cur]}"`,
+            '')
+    )].join('\n');
 };
 /**
- * @name 数组所有内容都满足
+ * @name 数组最后一个
  * @param array
- * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
+ * @extends Array[]
+ * @example last([1, 2, 3]); // 3
  */
 export const Last = (array: any[]): any => {
-    return null
+    return array[array.length - 1]
 };
 /**
- * @name 数组所有内容都满足
+ * @name 提供的参数中length最大的元素
  * @param args
- * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
+ * @extends Array.reduce
+ * @example
+ * longestItem('this', 'is', 'a', 'testcase'); // 'testcase'
+ * longestItem(...['a', 'ab', 'abc']); // 'abc'
+ * longestItem(...['a', 'ab', 'abc'], 'abcd'); // 'abcd'
+ * longestItem([1, 2, 3], [1, 2], [1, 2, 3, 4, 5]); // [1, 2, 3, 4, 5]
+ * longestItem([1, 2, 3], 'foobar'); // 'foobar'
  */
 export const LongestItem = (...args: any[]): any => {
-    return null
+    return args.reduce((acc, cur) => cur.length > acc.length ? cur : acc)
 };
-/**
- * @name 数组所有内容都满足
- * @param args
- * @extends Array.every
- * @example all([4, 2, 3], x => x > 1); // true
- */
-export const MapObject = (...args: any[]): any => {
-    return null
-};
+
