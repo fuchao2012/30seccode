@@ -61,3 +61,16 @@ export const hexToRGB = (hex: string): string => {
      ${alpha ? ', ' + formattedHex & 0x000000ff : ''})`
 };
 
+/**
+ * 多个函数哪个效率最高
+ * @param fns
+ * @param iterations
+ */
+export const mostPerformant = (fns: any[], iterations = 10000) => {
+    const times = fns.map(fn => {
+        const before = performance.now();
+        while (iterations--) fn();
+        return performance.now() - before;
+    });
+    return times.indexOf(Math.min(...times))
+};
