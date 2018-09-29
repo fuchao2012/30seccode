@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "lib": ["esnext", "es6", "dom"]
+    "lib": ["esnext", "es6", "dom", "es7"]
   },
   "exclude": [
     "node_modules"
